@@ -5,7 +5,7 @@
 \input{map_counts}
 
 \begin{document}
-\doctitle{Requirements to Tests Map}{\team \\ First issued October 22, 2026; this revision October 25, 2026}
+\doctitle{Requirements to Tests Map}{\team \\ First issued October 22, 2026; this revision October 26, 2026}
 
 \section*{What this map covers}
 CS-1 to CS-12 are the Contributor user stories split into requirements that can each be tested
@@ -55,7 +55,7 @@ the negative test checks the database the positive test reopened.
 \end{tabularx}
 
 \section*{Latest run}
-October 25, 2026, on the submitted source:
+October 26, 2026, on the submitted source:
 
 \begin{tabularx}{\linewidth}{@{}X r r r@{}}
 \toprule
@@ -64,9 +64,9 @@ October 25, 2026, on the submitted source:
 LessonValidationTestingAutomation (VAL) & 25 & 25 & 0 \\
 LessonsCrudTestingAutomation (CRUD) & 14 & 14 & 0 \\
 LessonsListTestingAutomation (LIST) & 13 & 13 & 0 \\
-LessonsModelTestingAutomation (MOD) & 20 & 20 & 0 \\
+LessonsModelTestingAutomation (MOD) & 24 & 24 & 0 \\
 \midrule
-\textbf{Total, automated} & \textbf{72} & \textbf{72} & \textbf{0} \\
+\textbf{Total, automated} & \textbf{76} & \textbf{76} & \textbf{0} \\
 \bottomrule
 \end{tabularx}
 
@@ -99,6 +99,12 @@ Oct 25 & Review before submission. (1) Saving over the \texttt{lessonsLearned} t
   tests now check the refusal message. (4) Added LIST-11 to LIST-13 (order, case, empty term),
   MOD-17 to MOD-20 (no-match messages, editing someone else's lesson), and MAN-01 to MAN-07.
   Result: 72 of 72. \\
+Oct 26 & Moksha's review of the editor (pull request \#1) found two more defects. An empty first
+  keyword (``, java'') was silently removed by \texttt{tidyKeywords} and the lesson accepted, and
+  \texttt{validateKeywords} dropped a trailing empty entry (``java,''). A lesson could also be
+  stored under ``All categories'', the filter's own label, and then never be shown on its own.
+  Fixed in \texttt{ModelLessonEditor} and \texttt{LessonInputPolicy}, with the label now a single
+  constant shared by the filter and the rule; MOD-21 to MOD-24 added. Result: 76 of 76. \\
 \bottomrule
 \end{tabularx}
 

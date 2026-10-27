@@ -30,8 +30,10 @@ import entityClasses.LessonsLearnedList;
 public class ModelLessonsList {
 
 	/** The text shown in the category filter for "do not filter by category".  It is a constant
-	 *  so the View that offers it and the Model that recognises it cannot spell it differently. */
-	public static final String ALL_CATEGORIES = "All categories";
+	 *  so the View that offers it and the Model that recognises it cannot spell it differently,
+	 *  and it is taken from LessonInputPolicy so validation refuses exactly this name as a real
+	 *  category. */
+	public static final String ALL_CATEGORIES = validation.LessonInputPolicy.RESERVED_CATEGORY;
 
 	/** Source: CS-2.  Every stored lesson, newest first, read when the page is displayed.  The
 	 *  lesson editor and the lesson detail page use this same list, so a change made on either of

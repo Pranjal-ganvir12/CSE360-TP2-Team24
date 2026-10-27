@@ -13,8 +13,8 @@ package testingAutomation;
  *       CS-7, CS-8, CS-9, and CS-12 (including close-and-reopen persistence)</li>
  *   <li>{@link LessonsListTestingAutomation}: 13 tests, LIST-01 to LIST-13, for CS-2, CS-4,
  *       CS-5, and CS-6</li>
- *   <li>{@link LessonsModelTestingAutomation}: 20 tests, MOD-01 to MOD-20, for CS-1, CS-2, and
- *       CS-4 to CS-9 at the GUI Model layer</li>
+ *   <li>{@link LessonsModelTestingAutomation}: 24 tests, MOD-01 to MOD-24, for CS-1, CS-2,
+ *       CS-4 to CS-9, and CS-11 at the GUI Model layer</li>
  * </ul>
  *
  * <p> The manual procedures, MAN-01 to MAN-07, need a person at the running application, so
@@ -31,6 +31,7 @@ package testingAutomation;
  * @author CSE 360 TP2 Team
  *
  * @version 1.00  2026-10-22  Initial version for Team Project Phase 2
+ * @version 1.20  2026-10-26  76 tests in four suites (MOD-21 to MOD-24 added)
  * @version 1.10  2026-10-25  72 tests in four suites; manual procedures listed
  */
 public class TP2TestRunner {

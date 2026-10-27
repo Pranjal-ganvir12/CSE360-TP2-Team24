@@ -52,6 +52,11 @@ public class LessonInputPolicy {
 	/** The contributor is a username, so it uses the same limit usernames use elsewhere. */
 	public static final int MAX_CONTRIBUTOR = InputLimits.MAX_USERNAME;
 
+	/** The label the list page's category filter uses for "do not filter by category".  It is
+	 *  defined here, not in the GUI, so the rule that refuses it as a category and the filter that
+	 *  offers it share one value; guiLessonsList.ModelLessonsList.ALL_CATEGORIES refers to it. */
+	public static final String RESERVED_CATEGORY = "All categories";
+
 	/**
 	 * The cheap ceiling for the two long text fields.
 	 *
@@ -160,7 +165,9 @@ public class LessonInputPolicy {
 	 * <p> Method: Problem validateCategory(String category) </p>
 	 *
 	 * <p> Description: The category is required because the filter by category (CS-5) has
-	 * nothing to group a lesson under if it is blank. </p>
+	 * nothing to group a lesson under if it is blank.  {@link #RESERVED_CATEGORY} is refused,
+	 * ignoring case and surrounding spaces, because the filter treats it as "every category", so
+	 * a lesson stored under it could never be shown on its own. </p>
 	 *
 	 * @param category the category the user typed
 	 *
@@ -174,10 +181,10 @@ public class LessonInputPolicy {
 
 		// This exact label is the list screen's sentinel for disabling its category filter.
 		// Storing it as real data would make that category impossible to select by itself.
-		if ("All categories".equalsIgnoreCase(category.trim()))
+		if (RESERVED_CATEGORY.equalsIgnoreCase(category.trim()))
 			return new Problem("The category name is reserved",
-					"Choose a category other than All categories. That name is used by the "
-					+ "list screen to turn category filtering off.");
+					"Choose a category other than " + RESERVED_CATEGORY + ". That name is used "
+					+ "by the list screen to turn category filtering off.");
 
 		String lengthProblem = InputLimits.checkLength(category, MAX_CATEGORY, "Category");
 		if (!lengthProblem.isEmpty())

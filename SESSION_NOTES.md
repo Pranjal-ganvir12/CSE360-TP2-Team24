@@ -188,3 +188,29 @@ machine). `.gitignore` excludes `TP2.zip`, build output, LaTeX intermediates, `.
 5. `working/scripts/TP2 MAIN VIDEO SCRIPTS.md` and the standup scripts are out of date; use
    `Screencast Guide.pdf`.
 6. Every member verifies the Canvas submission and completes the peer evaluation.
+
+---
+
+## 7. Pull request #1 (Moksha Dev), merged 2026-10-26
+
+Moksha's review of the editor found the defects that `TP2_proposed_fixes.diff` hunks 2–4 had
+described: `tidyKeywords` silently dropped an empty first keyword (", java" became "java" and was
+accepted), `validateKeywords` used `split(",")` and so accepted "java," when called directly, and
+"All categories" (the filter's own label) could be stored as a category and then never shown on
+its own. PR #1 fixed all three and added MOD-21 to MOD-23; it did not include the unsafe
+column-widening hunk.
+
+Reviewed before merging (75/75, TP1 runner passing), then merged as `dc40ca9`. Follow-up in the
+same session:
+- `LessonInputPolicy.RESERVED_CATEGORY` is now the single value; `ModelLessonsList.ALL_CATEGORIES`
+  refers to it, so the rule and the filter cannot drift apart.
+- MOD-21 and MOD-22 relabelled CS-11 (keyword rules); full Javadoc (How, Pass when) added to
+  MOD-21 to MOD-23.
+- MOD-24 added (CS-5, positive): "All", "Categories", "All categories list" are accepted and a
+  lesson under "All" can be filtered on its own.
+- Counts updated in `TP2TestRunner`, `testingAutomation/package-info.java`, the map, the
+  TestingScreencast script, and the README; `working/build_all.sh` rerun.
+
+Result: 76/76 automated (83 with the manual procedures), TP1 runner passing, 0 broken Javadoc
+links, 151 code screenshots. Screencast Guide page numbers unchanged, so the remote-control
+prompt still matches.

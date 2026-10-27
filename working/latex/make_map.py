@@ -19,13 +19,13 @@ REQS = [
  ("CS-2", "A contributor can see all lessons, newest first. An empty list is explained in words, not shown as a blank screen."),
  ("CS-3", "A contributor can open one lesson and see all of its fields."),
  ("CS-4", "A contributor can search lessons. The search covers title, description, and keywords and ignores case. No match is explained in words."),
- ("CS-5", "A contributor can filter lessons by category. An empty category is explained in words."),
+ ("CS-5", "A contributor can filter lessons by category. An empty category is explained in words. The filter's label \u201cAll categories\u201d cannot be used as a category."),
  ("CS-6", "A contributor can view only their own lessons. If they have none, a message says so."),
  ("CS-7", "A contributor can update a lesson they contributed. An update is validated the same way as a new lesson."),
  ("CS-8", "A contributor can delete a lesson they contributed, after confirming. It is removed for all users."),
  ("CS-9", "Only the contributor of a lesson can update or delete it. Any other user is refused with a message."),
  ("CS-10", "Title, category, description, and contributor are required; resolution and keywords are optional. A missing required value is refused with a message naming the field."),
- ("CS-11", "Length limits: title 80, category 30, description 2000, resolution 2000, keywords 200 characters, at most 10 keywords of 30 characters each. A value over a limit is refused with a message naming the field."),
+ ("CS-11", "Length limits: title 80, category 30, description 2000, resolution 2000, keywords 200 characters, at most 10 keywords of 30 characters each. A value over a limit, or an empty keyword entry, is refused with a message naming the problem."),
  ("CS-12", "Lessons persist across application restarts, including on a database left by an HW2 version."),
 ]
 

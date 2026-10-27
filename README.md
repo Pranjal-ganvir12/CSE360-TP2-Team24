@@ -15,5 +15,5 @@ Requires JDK 25, JavaFX SDK 25.0.4, the H2 jar, a TeX Live install, and Google C
 JavaFX and H2 paths are set at the top of `build_javadoc.sh` and `screenshots/make_screenshots.py`
 (default `~/Projects/ASU-Foundations-F26/tools/`).
 
-Run the tests: `testingAutomation.TP2TestRunner` (72 automated tests). Manual procedures:
+Run the tests: `testingAutomation.TP2TestRunner` (76 automated tests). Manual procedures:
 `testingAutomation.LessonsManualTestProcedures`.

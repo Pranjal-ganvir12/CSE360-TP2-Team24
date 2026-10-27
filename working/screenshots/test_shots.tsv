@@ -64,6 +64,10 @@ MOD-04	7.4-MOD-04-MessageWhenUserHasNoLessons.png	LessonsModelTestingAutomation
 MOD-11	7.4-MOD-11-OwnerMayChange.png	LessonsModelTestingAutomation
 MOD-12	7.4-MOD-12-NonOwnerMayNotChange.png	LessonsModelTestingAutomation
 MOD-20	7.4-MOD-20-NonOwnerEdit.png	LessonsModelTestingAutomation
+MOD-21	7.4-MOD-21-LeadingEmptyKeywordRefused.png	LessonsModelTestingAutomation
+MOD-22	7.4-MOD-22-TrailingEmptyKeywordRefused.png	LessonsModelTestingAutomation
+MOD-23	7.4-MOD-23-ReservedCategoryRefused.png	LessonsModelTestingAutomation
+MOD-24	7.4-MOD-24-SimilarCategoryNamesAccepted.png	LessonsModelTestingAutomation
 MOD-13	7.4-MOD-13-OwnerUpdate.png	LessonsModelTestingAutomation
 MOD-14	7.4-MOD-14-UpdateBlankDescription.png	LessonsModelTestingAutomation
 MOD-15	7.4-MOD-15-OwnerDelete.png	LessonsModelTestingAutomation

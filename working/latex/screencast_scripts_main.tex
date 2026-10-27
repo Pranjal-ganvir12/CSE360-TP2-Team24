@@ -206,7 +206,7 @@ console font so the Pass lines can be read.}
 This table is the list of deliverable requirements, 7.1 to 7.4, with the files for each. For 7.1,
 the Requirements to Tests Map lists all twelve requirements, CS-1 to CS-12. For 7.2, each row
 gives its positive tests, its negative tests, and the HTML pages that document them. Every
-requirement has at least one of each. There are seventy-nine tests: seventy-two automated tests
+requirement has at least one of each. There are eighty-three tests: seventy-six automated tests
 in four suites, and seven manual procedures for things only a window can show.}
 
 \act{Scroll to ``Every test, its Javadoc, and its screenshot''.}
@@ -275,11 +275,13 @@ message names the category. MOD-09 and 10 are ``Only my lessons''. MOD-11 and 12
 ownership rule behind the Edit and Delete buttons. MOD-13 saves the contributor's change; MOD-14
 refuses an edit that empties the description. MOD-15 deletes, and the lesson is gone from the
 database and the shared list. MOD-16 refuses a delete by someone else, and MOD-20 refuses their
-edit, with the stored title unchanged. MOD-19 is the message for an empty database. Twenty of
-twenty.}
+edit, with the stored title unchanged. MOD-19 is the message for an empty database. MOD-21 to 24
+came from Moksha's review: a keyword list starting or ending with a comma is refused instead of
+silently changed, ``All categories'' can't be used as a category name because the filter uses it,
+and names that only look similar, like ``All'', still work. Twenty-four of twenty-four.}
 
 \act{Scroll to the combined block.}
-\say{The combined result: seventy-two tests, seventy-two passed, none failed. To make sure these
+\say{The combined result: seventy-six tests, seventy-six passed, none failed. To make sure these
 tests can actually fail, we put three defects into a copy of the code, and six tests failed, each
 one naming the requirement that broke.}
 

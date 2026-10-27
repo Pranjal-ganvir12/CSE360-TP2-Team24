@@ -24,7 +24,9 @@ import validation.LessonInputPolicy.Problem;
  * <p> Requirements covered: CS-1 (create, contributor set from the logged in user), CS-2 (the
  * list and its empty-state message), CS-4 (search and its no-match message), CS-5 (category
  * filter and its no-match message), CS-6 (only my lessons), CS-7 (update), CS-8 (delete), and
- * CS-9 (only the contributor may update or delete). </p>
+ * CS-9 (only the contributor may update or delete), CS-11 (empty keyword entries are kept so
+ * validation can refuse them), and the CS-5 rule that the filter's "All categories" label
+ * cannot be stored as a category. </p>
  *
  * <p> The tests share one in-memory database and run in id order.  MOD-01 stores a lesson for
  * arushugal and a second lesson is stored for karanpatel before MOD-03; later tests use these
@@ -42,6 +44,8 @@ import validation.LessonInputPolicy.Problem;
  * @author CSE 360 TP2 Team
  *
  * @version 1.00  2026-10-21  Initial version for Team Project Phase 2
+ * @version 1.20  2026-10-26  MOD-21 to MOD-24: empty keyword entries and the reserved
+ *                            category (Moksha Dev, PR #1, with a positive MOD-24)
  * @version 1.10  2026-10-25  One method per test; status message tests for CS-2, CS-4, CS-5;
  *                            non-owner edit test
  */
@@ -81,7 +85,7 @@ public class LessonsModelTestingAutomation {
 		numFailed = 0;
 
 		System.out.println("------------------------------------------------------------");
-		System.out.println("  Lessons GUI Model Tests (CS-1, CS-2, CS-4 to CS-9)");
+		System.out.println("  Lessons GUI Model Tests (CS-1, CS-2, CS-4 to CS-9, CS-11)");
 		System.out.println("------------------------------------------------------------");
 
 		db = new LessonsLearnedDatabase();
@@ -118,9 +122,10 @@ public class LessonsModelTestingAutomation {
 			mod21LeadingEmptyKeywordRefused();
 			mod22TrailingEmptyKeywordRefused();
 			mod23ReservedCategoryRefused();
+			mod24SimilarCategoryNamesAccepted();
 		} catch (SQLException e) {
 			System.out.println("  SETUP FAILED: " + e.getMessage());
-			numFailed += 23;
+			numFailed += 24;
 		} finally {
 			db.closeConnection();
 		}
@@ -410,31 +415,42 @@ public class LessonsModelTestingAutomation {
 	}
 
 	/**
-	 * <p> MOD-21 (CS-10, negative).  The editor preserves a leading empty keyword so validation
-	 * refuses it instead of silently changing what the contributor typed. </p>
+	 * <p> MOD-21 (CS-11, negative).  The editor keeps a leading empty keyword, so validation
+	 * refuses it instead of the editor silently changing what the contributor typed. </p>
+	 * <p> How: tidyKeywords(", java") is called the way ModelLessonEditor does before saving,
+	 * and the result is passed to LessonInputPolicy.validateKeywords.  Before the fix the editor
+	 * returned "java" and the lesson was accepted. </p>
+	 * <p> Pass when: the tidied text is ", java" and the problem is "A keyword is empty". </p>
 	 */
 	private static void mod21LeadingEmptyKeywordRefused() {
 		String tidied = ModelLessonEditor.tidyKeywords(", java");
 		Problem problem = validation.LessonInputPolicy.validateKeywords(tidied);
-		check("MOD-21 leading empty keyword is preserved and refused (negative, CS-10)",
+		check("MOD-21 leading empty keyword is preserved and refused (negative, CS-11)",
 				", java".equals(tidied) && problem != null
 				&& "A keyword is empty".equals(problem.title()));
 	}
 
 	/**
-	 * <p> MOD-22 (CS-10, negative).  A trailing comma is an empty keyword and is refused. </p>
+	 * <p> MOD-22 (CS-11, negative).  A trailing comma is an empty keyword and is refused. </p>
+	 * <p> How: tidyKeywords("java,") gives "java, ", which validateKeywords splits with a
+	 * negative limit so the trailing empty entry is kept.  Before the fix, split(",") dropped it
+	 * and a direct call accepted "java,". </p>
+	 * <p> Pass when: the tidied text is "java, " and the problem is "A keyword is empty". </p>
 	 */
 	private static void mod22TrailingEmptyKeywordRefused() {
 		String tidied = ModelLessonEditor.tidyKeywords("java,");
 		Problem problem = validation.LessonInputPolicy.validateKeywords(tidied);
-		check("MOD-22 trailing empty keyword is refused (negative, CS-10)",
+		check("MOD-22 trailing empty keyword is refused (negative, CS-11)",
 				"java, ".equals(tidied) && problem != null
 				&& "A keyword is empty".equals(problem.title()));
 	}
 
 	/**
-	 * <p> MOD-23 (CS-5, negative).  The editor refuses the list screen's sentinel label as a
-	 * real category, because such a lesson could not be filtered by that category. </p>
+	 * <p> MOD-23 (CS-5, negative).  The editor refuses the list page's "All categories" label as
+	 * a real category, because a lesson stored under it could never be filtered on its own. </p>
+	 * <p> How: saveNewLesson is called with ModelLessonsList.ALL_CATEGORIES as the category. </p>
+	 * <p> Pass when: the problem is "The category name is reserved" and no lesson with the test
+	 * title was stored. </p>
 	 */
 	private static void mod23ReservedCategoryRefused() {
 		Problem problem = ModelLessonEditor.saveNewLesson(db, ModelLessonsList.getAllLessons(),
@@ -443,6 +459,28 @@ public class LessonsModelTestingAutomation {
 		check("MOD-23 reserved category name is refused (negative, CS-5)",
 				problem != null && "The category name is reserved".equals(problem.title())
 				&& lessonTitled("Reserved category check") == null);
+	}
+
+	/**
+	 * <p> MOD-24 (CS-5, positive).  Names that only resemble the reserved label are still
+	 * accepted, and a lesson stored under one can be filtered on its own. </p>
+	 * <p> How: validateCategory is called with "All", "Categories", and "All categories list";
+	 * then a lesson is saved under "All" and the page is filtered by "All". </p>
+	 * <p> Pass when: all three names are accepted, the save returns null, and filtering by "All"
+	 * shows exactly that one lesson. </p>
+	 */
+	private static void mod24SimilarCategoryNamesAccepted() {
+		boolean namesAccepted = validation.LessonInputPolicy.validateCategory("All") == null
+				&& validation.LessonInputPolicy.validateCategory("Categories") == null
+				&& validation.LessonInputPolicy.validateCategory("All categories list") == null;
+		Problem problem = ModelLessonEditor.saveNewLesson(db, ModelLessonsList.getAllLessons(),
+				"mokshadev", "Category named All", "All", "",
+				"A lesson whose category merely starts like the reserved label.", "");
+		reload();
+		ModelLessonsList.refreshShownLessons("", "All", false, "mokshadev");
+		check("MOD-24 names like 'All' accepted and filterable (positive, CS-5)",
+				namesAccepted && problem == null && ModelLessonsList.getShownLessons().size() == 1
+				&& "Category named All".equals(ModelLessonsList.lessonAt(0).getTitle()));
 	}
 
 
