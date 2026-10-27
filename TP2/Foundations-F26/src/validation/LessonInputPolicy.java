@@ -172,6 +172,13 @@ public class LessonInputPolicy {
 					"Enter a category, for example Setup or Database, so the lesson can be "
 					+ "grouped and found later.");
 
+		// This exact label is the list screen's sentinel for disabling its category filter.
+		// Storing it as real data would make that category impossible to select by itself.
+		if ("All categories".equalsIgnoreCase(category.trim()))
+			return new Problem("The category name is reserved",
+					"Choose a category other than All categories. That name is used by the "
+					+ "list screen to turn category filtering off.");
+
 		String lengthProblem = InputLimits.checkLength(category, MAX_CATEGORY, "Category");
 		if (!lengthProblem.isEmpty())
 			return new Problem("The category is too long", lengthProblem);
@@ -203,7 +210,9 @@ public class LessonInputPolicy {
 		if (!lengthProblem.isEmpty())
 			return new Problem("The keywords are too long", lengthProblem);
 
-		String[] parts = keywords.split(",");
+		// Preserve a trailing empty entry so "java," is refused just like ",java" and
+		// "java,,database".  String.split without a negative limit silently discards it.
+		String[] parts = keywords.split(",", -1);
 		if (parts.length > MAX_KEYWORD_COUNT)
 			return new Problem("There are too many keywords",
 					"A lesson can have at most " + MAX_KEYWORD_COUNT + " keywords. You entered "

@@ -115,9 +115,12 @@ public class LessonsModelTestingAutomation {
 			mod18MessageForNoCategoryMatch();
 			mod19MessageWhenNoLessonsStored();
 			mod20NonOwnerEdit();
+			mod21LeadingEmptyKeywordRefused();
+			mod22TrailingEmptyKeywordRefused();
+			mod23ReservedCategoryRefused();
 		} catch (SQLException e) {
 			System.out.println("  SETUP FAILED: " + e.getMessage());
-			numFailed += 20;
+			numFailed += 23;
 		} finally {
 			db.closeConnection();
 		}
@@ -404,6 +407,42 @@ public class LessonsModelTestingAutomation {
 				problem != null
 				&& "Only the contributor can change this lesson".equals(problem.title())
 				&& stored != null && FX_TITLE.equals(stored.getTitle()));
+	}
+
+	/**
+	 * <p> MOD-21 (CS-10, negative).  The editor preserves a leading empty keyword so validation
+	 * refuses it instead of silently changing what the contributor typed. </p>
+	 */
+	private static void mod21LeadingEmptyKeywordRefused() {
+		String tidied = ModelLessonEditor.tidyKeywords(", java");
+		Problem problem = validation.LessonInputPolicy.validateKeywords(tidied);
+		check("MOD-21 leading empty keyword is preserved and refused (negative, CS-10)",
+				", java".equals(tidied) && problem != null
+				&& "A keyword is empty".equals(problem.title()));
+	}
+
+	/**
+	 * <p> MOD-22 (CS-10, negative).  A trailing comma is an empty keyword and is refused. </p>
+	 */
+	private static void mod22TrailingEmptyKeywordRefused() {
+		String tidied = ModelLessonEditor.tidyKeywords("java,");
+		Problem problem = validation.LessonInputPolicy.validateKeywords(tidied);
+		check("MOD-22 trailing empty keyword is refused (negative, CS-10)",
+				"java, ".equals(tidied) && problem != null
+				&& "A keyword is empty".equals(problem.title()));
+	}
+
+	/**
+	 * <p> MOD-23 (CS-5, negative).  The editor refuses the list screen's sentinel label as a
+	 * real category, because such a lesson could not be filtered by that category. </p>
+	 */
+	private static void mod23ReservedCategoryRefused() {
+		Problem problem = ModelLessonEditor.saveNewLesson(db, ModelLessonsList.getAllLessons(),
+				"mokshadev", "Reserved category check", ModelLessonsList.ALL_CATEGORIES,
+				"filter", "This should not be stored under the filter sentinel.", "");
+		check("MOD-23 reserved category name is refused (negative, CS-5)",
+				problem != null && "The category name is reserved".equals(problem.title())
+				&& lessonTitled("Reserved category check") == null);
 	}
 
 

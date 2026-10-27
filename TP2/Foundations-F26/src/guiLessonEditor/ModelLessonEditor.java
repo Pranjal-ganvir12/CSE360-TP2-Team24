@@ -1,5 +1,7 @@
 package guiLessonEditor;
 
+import java.util.Locale;
+
 import database.LessonsLearnedDatabase;
 import entityClasses.LessonsLearned;
 import entityClasses.LessonsLearnedList;
@@ -154,13 +156,17 @@ public class ModelLessonEditor {
 			return "";
 		StringBuilder result = new StringBuilder();
 		java.util.Set<String> seen = new java.util.HashSet<>();
+		boolean first = true;
 		for (String part : keywords.split(",", -1)) {
 			String keyword = part.trim();
-			if (!keyword.isEmpty() && !seen.add(keyword.toLowerCase()))
+			if (!keyword.isEmpty() && !seen.add(keyword.toLowerCase(Locale.ROOT)))
 				continue;
-			if (result.length() > 0)
+			// Delimit by position rather than result length.  An empty first entry must remain
+			// visible (", java"), otherwise validation never sees the user's leading comma.
+			if (!first)
 				result.append(", ");
 			result.append(keyword);
+			first = false;
 		}
 		return result.toString();
 	}
